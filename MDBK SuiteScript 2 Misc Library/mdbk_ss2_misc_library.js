@@ -36,5 +36,10 @@ define([], function () {
         return txt;
     }
 
+    exports.getTorF = function(input) {
+        if(input == 'T' || input === true) return 'T';
+        return 'F';
+    }
+
     return exports;
 });
