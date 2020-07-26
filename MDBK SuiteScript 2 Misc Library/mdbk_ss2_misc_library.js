@@ -12,26 +12,27 @@ define([], function () {
     var exports = {};
 
     exports.errorText = function(_e, include_stacktrace) {
+        if(typeof _e == 'string') return _e;
         var txt = '';
         var errortxt = '';
         var errortype = '';
         var errorstack = '';
         var internalid = null;
-        if (_e instanceof nlobjError) {
-            internalid = _e.getId();
+        if (_e.constructor.name == 'SuiteScriptError') {
+            internalid = _e.recordId;
             errortype = 'NLAPI Error';
-            errortxt = _e.getCode()+' :: '+_e.getDetails();
-            if(include_stacktrace) errorstack = _e.getStackTrace().join(', ');
+            errortxt = _e.name+': '+_e.message;
+            if(include_stacktrace) errorstack = _e.stack.join(', ');
         } else {
             errortype = 'Javascript Error';
             errortxt = _e.toString();
             if(include_stacktrace) errorstack= _e.stack;
         }
         
-        txt = errortype+': ';
-        if(internalid) txt += 'Record ID '+internalid+' :: ';
+        txt = errortype+' | ';
+        if(internalid) txt += 'Record ID: '+internalid+' | ';
         txt += errortxt;
-        if(errorstack) txt += ' :: Stack '+ errorstack;
+        if(errorstack) txt += ' | Stack: '+ errorstack;
 
         return txt;
     }
