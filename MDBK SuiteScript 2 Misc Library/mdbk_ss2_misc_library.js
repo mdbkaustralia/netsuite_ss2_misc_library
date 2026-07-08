@@ -376,68 +376,29 @@ define(['N/runtime', 'N/task', 'N/search', 'N/record', 'N/log'], function (runti
      * @param {number|string} object.to Target unit: 1/"lb", 2/"oz", 3/"kg", or 4/"g" (NetSuite internal ID or name).
      * @returns {number} The converted weight in the target unit.
      */
-        if (!object || typeof object.amount !== 'number' || object.from == null || object.to == null) {
-            throw new Error('convertWeight: object.amount (number), object.from, and object.to are required');
-        }
     exports.convertWeight = function (object) {
-        var weightinlb;
-        var weight;
-        if (typeof object.from == 'string') object.from = object.from.toLowerCase();
+        var UNITS = {
+            'lb': 1,         '1': 1,
+            'oz': 0.0625,    '2': 0.0625,
+            'kg': 2.20462,   '3': 2.20462,
+            'g': 0.00220462, '4': 0.00220462
+        };
 
-        switch (object.from) {
-            case "lb":
-            case "1":
-            case 1:
-                object.from = 1;
-                weightinlb = object.amount;
-                break;
-            case "oz":
-            case "2":
-            case 2:
-                object.from = 2;
-                weightinlb = object.amount * 0.0625;
-                break;
-            case "kg":
-            case "3":
-            case 3:
-                object.from = 3;
-                weightinlb = object.amount * 2.20462;
-                break;
-            case "g":
-            case "4":
-            case 4:
-                object.from = 4;
-                weightinlb = object.amount * 0.00220462;
-                break;
+        if (!object || typeof object.amount !== 'number' || object.from == null || object.to == null) {
+            throw new Error('convertWeight: object.amount (number), object.from, and object.to are required');
         }
-        switch (object.to) {
-            case "lb":
-            case "1":
-            case 1:
-                object.to = 1;
-                weight = weightinlb;
-                break;
-            case "oz":
-            case "2":
-            case 2:
-                object.to = 2;
-                weight = weightinlb / 0.0625;
-                break;
-            case "kg":
-            case "3":
-            case 3:
-                object.to = 3;
-                weight = weightinlb / 2.20462;
-                break;
-            case "g":
-            case "4":
-            case 4:
-                object.to = 4;
-                weight = weightinlb / 0.00220462;
-                break;
+
+        var fromKey = String(object.from).toLowerCase();
+        var toKey = String(object.to).toLowerCase();
+
+        if (!(fromKey in UNITS)) {
+            throw new Error('convertWeight: unrecognised source unit "' + object.from + '"');
         }
-        if (object.from == object.to) return object.amount;
-        return weight;
+        if (!(toKey in UNITS)) {
+            throw new Error('convertWeight: unrecognised target unit "' + object.to + '"');
+        }
+
+        return object.amount * UNITS[fromKey] / UNITS[toKey];
     };
 
     return exports;
