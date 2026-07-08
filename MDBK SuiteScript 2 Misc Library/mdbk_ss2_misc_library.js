@@ -8,7 +8,8 @@
  * 
  * @NApiVersion 2.0
  */
-define(['N/runtime', 'N/task', 'N/search', 'N/record', 'N/log'], function (runtime, task, search, record, log) {
+define(['N/runtime', 'N/task', 'N/search', 'N/record', 'N/log'], function (runtime, task, search, record, log) {
+
     var exports = {};
     var GOVERNANCE_THRESHOLD = 100;
     var RESCHEDULE_COMPLETE = false;
@@ -375,11 +376,13 @@ define(['N/runtime', 'N/task', 'N/search', 'N/record', 'N/log'], function (runti
      * @param {number|string} object.to Target unit: 1/"lb", 2/"oz", 3/"kg", or 4/"g" (NetSuite internal ID or name).
      * @returns {number} The converted weight in the target unit.
      */
+        if (!object || typeof object.amount !== 'number' || object.from == null || object.to == null) {
+            throw new Error('convertWeight: object.amount (number), object.from, and object.to are required');
+        }
     exports.convertWeight = function (object) {
         var weightinlb;
         var weight;
         if (typeof object.from == 'string') object.from = object.from.toLowerCase();
-        if (typeof object.to == 'string') object.to = object.to.toLowerCase();
 
         switch (object.from) {
             case "lb":
