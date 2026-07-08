@@ -277,7 +277,7 @@ define(['N/runtime', 'N/task', 'N/search', 'N/record', 'N/log'], function (runti
         var myregexp = /(?:\.|^)(\w+)$/im;
         var match = myregexp.exec(filename);
         if (match != null) {
-            extension = match[1];
+            var extension = match[1];
         } else {
             return null;
         }
