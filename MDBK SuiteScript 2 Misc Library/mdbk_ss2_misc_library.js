@@ -8,7 +8,7 @@
  * 
  * @NApiVersion 2.0
  */
-define(['N/runtime', 'N/task', 'N/search', 'N/record'], function (runtime, task, search, record) {
+define(['N/runtime', 'N/task', 'N/search', 'N/record', 'N/log'], function (runtime, task, search, record, log) {
     var exports = {};
     var GOVERNANCE_THRESHOLD = 100;
     var RESCHEDULE_COMPLETE = false;
